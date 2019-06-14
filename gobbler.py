@@ -57,3 +57,9 @@ if __name__=="__main__":
         MacMain()
 
     zipf.close()
+
+"""
+So the gobbler needs to be able to create files that do not share a same name and be added to either too be deleted or delete folder.
+The next step is to figure out how to determine the date at which folders were added, and then delete them. also to determine whether
+the folders will be in the gobbler package or apart of something else, I would guess tmp, makes the most sense.
+"""
