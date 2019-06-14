@@ -28,7 +28,17 @@ def zipdir(path, ziph):
         for file in files:
             ziph.write(os.path.join(root, file))
 
+def CreateFolders(folder):
+    try:
+        os.mkdir("/tmp/"+folder)
+    except OSError:
+        print ("Creation of the directory %s failed" % folder)
+
 def LinuxMain(zipf):
+    if not os.path.exists("/tmp/TooBeDeleted/"):
+        CreateFolders("TooBeDeleted")
+    if not os.path.exists("/tmp/TheHold/"):
+        CreateFolders("TheHold")
     path = options.start
     os.chdir(path)
     for root, dirs, files in os.walk(path):
@@ -53,7 +63,6 @@ def NameGenerator():
     time.sleep(.3)
     s=int(time.time() %(t%(172800+1)))
     return("TooBeZipped"+str(s)+".zip")
-
 
 
 if __name__=="__main__":
