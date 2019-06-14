@@ -8,6 +8,8 @@ import os
 from optparse import OptionParser
 import zipfile
 from shutil import rmtree
+import time
+
 
 
 usage = "Usage: %prog [ -s|--start ][options] [files]"
@@ -46,8 +48,16 @@ def WindowsMain(zipf):
 def MacMain(zipf):
     pass
 
+def NameGenerator():
+    t = int(time.time())
+    time.sleep(.3)
+    s=int(time.time() %(t%(172800+1)))
+    return("TooBeZipped"+str(s)+".zip")
+
+
+
 if __name__=="__main__":
-    zipf = zipfile.ZipFile('TooBeGobbled.zip', 'w', zipfile.ZIP_DEFLATED)
+    zipf = zipfile.ZipFile(NameGenerator(), 'w', zipfile.ZIP_DEFLATED)
 
     if os.name == "posix":
         LinuxMain(zipf)
