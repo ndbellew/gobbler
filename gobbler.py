@@ -39,7 +39,7 @@ def CreateFolders(folder):
     except OSError:
         print ("Creation of the directory %s failed" % folder)
 
-def LinuxMain(zipf):
+def LinuxMain(zipf, zipn):
     if not os.path.exists("/tmp/TooBeDeleted/"):
         CreateFolders("TooBeDeleted")
     if not os.path.exists("/tmp/TheHold/"):
@@ -71,14 +71,14 @@ def NameGenerator():
     t = int(time.time())
     time.sleep(.3)
     s=int(time.time() %(t%(172800+1)))
-    return("TooBeZipped"+str(s)+".zip")
+    return("/tmp/TooBeDeleted/TooBeZipped"+str(s)+".zip")
 
 
 if __name__=="__main__":
-
-    zipf = zipfile.ZipFile(NameGenerator(), 'w', zipfile.ZIP_DEFLATED)
+    FileName = NameGenerator()
+    zipf = zipfile.ZipFile(FileName, 'w', zipfile.ZIP_DEFLATED)
     if os.name == "posix":
-        LinuxMain(zipf)
+        LinuxMain(zipf,FileName)
     elif os.name == "nt":
         WindowsMain()
     else:
