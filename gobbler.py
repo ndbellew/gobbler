@@ -9,7 +9,7 @@ from optparse import OptionParser
 import zipfile
 from shutil import rmtree
 import time
-VERSION="Gobbler 0.1.0 Alpha"
+VERSION="Gobbler 0.1.1a Alpha"
 
 usage = "Usage: %prog [ -s|--start ][options] [files]"
 parser = OptionParser(usage)
@@ -44,7 +44,6 @@ def DelZips():
         for file in files:
             if file.endswith(".zip"):
                 os.remove(file)
-
 
 def LinuxMain(zipf, zipn):
     if not os.path.exists("/tmp/TooBeDeleted/"):
