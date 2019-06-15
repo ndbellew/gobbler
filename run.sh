@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 gobbler.py $@
+python3 ~/.Gobbler/gobbler.py $@

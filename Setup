@@ -6,7 +6,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 echo "setting up assets."
 ln run.sh gobbler
+cp -r . ~/.Gobbler
 chmod +x gobbler
 mv gobbler /bin/gobbler
-sudo apt install python3
 echo "Setup complete, please ensure that you have read the README.md for Usage."
