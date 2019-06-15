@@ -2,7 +2,7 @@
 
 
 
-Usage: gobbler.py [ -s|--start ][options] [files]
+<p>Usage: gobbler.py [ -s|--start ][options] [files]<p>
 
 Options:
   -h, --help            show this help message and exit
