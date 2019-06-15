@@ -2,7 +2,7 @@
 
 The gobbler is a file deletion program, a  single command line program that takes, starting location and files/folders. each file/folder is stored in a zip and either deleted or put into a "Too be deleted" folder. Wherein after 48 hours the folder will delete all of its contents. Another folder will Hold all of the files deletd in a small make-shift logging system. 
 
-## Setuo
+## Setup
 Currently this is only working for linux users, if you run the Setup bash command it should complete everything that is needed. then just follow the usage. 
 
 
