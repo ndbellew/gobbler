@@ -9,13 +9,14 @@ from optparse import OptionParser
 import zipfile
 from shutil import rmtree
 import time
-
+VERSION="Gobbler 0.1.0 Alpha"
 
 usage = "Usage: %prog [ -s|--start ][options] [files]"
 parser = OptionParser(usage)
 parser.add_option('-s','--s',dest='start', help='Select starting location for gobbler to begin gobbling. ex. /home/usr/Documents')
 parser.add_option('-F','--folder', action='store_true',dest='folder',help='If any of the files chosen are/are also folders, then they will be included.')
 parser.add_option('-n', '--name', dest='name',help='Name Zip folder')
+parser.add_option('-v','--version',action='store_true',dest='version',help='Shows current version of gobbler.py', default=False)
 (options, args)= parser.parse_args()
 
 if len(args) < 1 or options.start is None:
@@ -65,16 +66,19 @@ def NameGenerator():
 
 
 if __name__=="__main__":
-    zipf = zipfile.ZipFile(NameGenerator(), 'w', zipfile.ZIP_DEFLATED)
 
-    if os.name == "posix":
-        LinuxMain(zipf)
-    elif os.name == "nt":
-        WindowsMain()
+    if options.version:
+        print(VERSION)
     else:
-        MacMain()
+        zipf = zipfile.ZipFile(NameGenerator(), 'w', zipfile.ZIP_DEFLATED)
+        if os.name == "posix":
+            LinuxMain(zipf)
+        elif os.name == "nt":
+            WindowsMain()
+        else:
+            MacMain()
 
-    zipf.close()
+        zipf.close()
 
 """
 So the gobbler needs to be able to create files that do not share a same name and be added to either too be deleted or delete folder.
