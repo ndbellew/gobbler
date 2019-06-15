@@ -16,12 +16,17 @@ parser = OptionParser(usage)
 parser.add_option('-s','--s',dest='start', help='Select starting location for gobbler to begin gobbling. ex. /home/usr/Documents')
 parser.add_option('-F','--folder', action='store_true',dest='folder',help='If any of the files chosen are/are also folders, then they will be included.')
 parser.add_option('-n', '--name', dest='name',help='Name Zip folder')
-parser.add_option('-v','--version',action='store_true',dest='version',help='Shows current version of gobbler.py', default=False)
+parser.add_option('-v','--version',action='store_true',dest='version',help='Shows current version of gobbler.py')
 (options, args)= parser.parse_args()
 
+
 if len(args) < 1 or options.start is None:
-    parser.print_help()
-    sys.exit(0)
+    if options.version:
+        print(VERSION)
+        sys.exit(0)
+    else:
+        parser.print_help()
+        sys.exit(0)
 
 def zipdir(path, ziph):
     for root, dirs, files in os.walk(path):
@@ -44,8 +49,12 @@ def LinuxMain(zipf):
     for root, dirs, files in os.walk(path):
         for file in files:
             if file in args:
-                zipf.write(file)
-                os.remove(file)
+                try:
+                    zipf.write(file)
+                    os.remove(file)
+                except FileNotFoundError:
+                    print("Either starting location is incorrect or file Does Not exist.")
+                    sys.exit(0)
         for dir in dirs:
             if dir in args and options.folder:
                 zipdir(dir, zipf)
@@ -67,18 +76,15 @@ def NameGenerator():
 
 if __name__=="__main__":
 
-    if options.version:
-        print(VERSION)
+    zipf = zipfile.ZipFile(NameGenerator(), 'w', zipfile.ZIP_DEFLATED)
+    if os.name == "posix":
+        LinuxMain(zipf)
+    elif os.name == "nt":
+        WindowsMain()
     else:
-        zipf = zipfile.ZipFile(NameGenerator(), 'w', zipfile.ZIP_DEFLATED)
-        if os.name == "posix":
-            LinuxMain(zipf)
-        elif os.name == "nt":
-            WindowsMain()
-        else:
-            MacMain()
+        MacMain()
 
-        zipf.close()
+    zipf.close()
 
 """
 So the gobbler needs to be able to create files that do not share a same name and be added to either too be deleted or delete folder.
