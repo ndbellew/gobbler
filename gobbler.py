@@ -17,6 +17,7 @@ parser.add_option('-s','--s',dest='start', help='Select starting location for go
 parser.add_option('-F','--folder', action='store_true',dest='folder',help='If any of the files chosen are/are also folders, then they will be included.')
 parser.add_option('-n', '--name', dest='name',help='Name Zip folder')
 parser.add_option('-v','--version',action='store_true',dest='version',help='Shows current version of gobbler.py')
+parser.add_option('-D','--delete', action='store_true',dest='delete',help='If this is given then all files/folders(assuming -F) listed will be deleted imediately and not stored or logged.')
 (options, args)= parser.parse_args()
 
 
@@ -38,6 +39,12 @@ def CreateFolders(folder):
         os.mkdir("/tmp/"+folder)
     except OSError:
         print ("Creation of the directory %s failed" % folder)
+def DelZips():
+    for root, dirs, files in os.walk("~/.Gobber"):
+        for file in files:
+            if file.endswith(".zip"):
+                os.remove(file)
+
 
 def LinuxMain(zipf, zipn):
     if not os.path.exists("/tmp/TooBeDeleted/"):
@@ -59,6 +66,7 @@ def LinuxMain(zipf, zipn):
             if dir in args and options.folder:
                 zipdir(dir, zipf)
                 rmtree(dir)
+    DelZips()
     #zipdir(path, zipf)
 
 def WindowsMain(zipf):
@@ -71,7 +79,10 @@ def NameGenerator():
     t = int(time.time())
     time.sleep(.3)
     s=int(time.time() %(t%(172800+1)))
-    return("/tmp/TooBeDeleted/TooBeZipped"+str(s)+".zip")
+    if not options.delete:
+        return("/tmp/TooBeDeleted/TooBeZipped"+str(s)+".zip")
+    else:
+        return("TooBeZipped"+str(s)+".zip")
 
 
 if __name__=="__main__":
