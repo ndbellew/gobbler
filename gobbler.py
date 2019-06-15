@@ -11,7 +11,6 @@ from shutil import rmtree
 import time
 
 
-
 usage = "Usage: %prog [ -s|--start ][options] [files]"
 parser = OptionParser(usage)
 parser.add_option('-s','--s',dest='start', help='Select starting location for gobbler to begin gobbling. ex. /home/usr/Documents')
