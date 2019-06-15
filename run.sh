@@ -1,2 +1,3 @@
 #!/bin/bash
-python3 gobbler.py
+shift
+python3 gobbler.py $@
