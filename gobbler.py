@@ -45,11 +45,19 @@ def DelZips():
             if file.endswith(".zip"):
                 os.remove(file)
 
-def LinuxMain(zipf, zipn):
-    if not os.path.exists("/tmp/TooBeDeleted/"):
-        CreateFolders("TooBeDeleted")
+def LinuxMain(zipn):
     if not os.path.exists("/tmp/TheHold/"):
         CreateFolders("TheHold")
+    if not os.path.exists("/tmp/TooBeDeleted/"):
+        CreateFolders("TooBeDeleted")
+    else:
+        os.chdir("/tmp/TooBeDeleted/")
+        for root,dirs,files in os.walk("."):
+            for file in files:
+                statinfo = os.stat(file)
+                if int(statinfo.st_mtime)>172800:
+                    os.remove(file)
+    zipf = zipfile.ZipFile(zipn, 'w', zipfile.ZIP_DEFLATED)
     path = options.start
     os.chdir(path)
     for root, dirs, files in os.walk(path):
@@ -66,6 +74,7 @@ def LinuxMain(zipf, zipn):
                 zipdir(dir, zipf)
                 rmtree(dir)
     DelZips()
+    zipf.close()
     #zipdir(path, zipf)
 
 def WindowsMain(zipf):
@@ -78,7 +87,7 @@ def NameGenerator():
     t = int(time.time())
     time.sleep(.3)
     s=int(time.time() %(t%(172800+1)))
-    if not options.delete:
+    if not options.delete and os.name == "posix":
         return("/tmp/TooBeDeleted/TooBeZipped"+str(s)+".zip")
     else:
         return("TooBeZipped"+str(s)+".zip")
@@ -86,15 +95,12 @@ def NameGenerator():
 
 if __name__=="__main__":
     FileName = NameGenerator()
-    zipf = zipfile.ZipFile(FileName, 'w', zipfile.ZIP_DEFLATED)
     if os.name == "posix":
-        LinuxMain(zipf,FileName)
+        LinuxMain(FileName)
     elif os.name == "nt":
         WindowsMain()
     else:
         MacMain()
-
-    zipf.close()
 
 """
 So the gobbler needs to be able to create files that do not share a same name and be added to either too be deleted or delete folder.
