@@ -9,6 +9,7 @@ from optparse import OptionParser
 import zipfile
 from shutil import rmtree
 import time
+import calendar
 VERSION="Gobbler 0.1.1a Alpha"
 
 usage = "Usage: %prog [ -s|--start ][options] [files]"
@@ -46,16 +47,16 @@ def DelZips():
                 os.remove(file)
 
 def LinuxMain(zipn):
-    if not os.path.exists("/tmp/TheHold/"):
+    if not os.path.exists("/tmp/TheHold"):
         CreateFolders("TheHold")
-    if not os.path.exists("/tmp/TooBeDeleted/"):
+    if not os.path.exists("/tmp/TooBeDeleted"):
         CreateFolders("TooBeDeleted")
     else:
         os.chdir("/tmp/TooBeDeleted/")
         for root,dirs,files in os.walk("."):
             for file in files:
                 statinfo = os.stat(file)
-                if int(statinfo.st_mtime)>172800:
+                if (int(calendar.timegm(time.gmtime()))-(int(statinfo.st_mtime))==172800):
                     os.remove(file)
     zipf = zipfile.ZipFile(zipn, 'w', zipfile.ZIP_DEFLATED)
     path = options.start
