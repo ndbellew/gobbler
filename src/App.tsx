@@ -8,11 +8,20 @@ type FileEntry = {
   size: number;
 };
 
+type WatchRuleEntry = {
+  path: string;
+  stageAfterDays: number;
+  deleteAfterDays: number;
+}
+
 function App() {
   const [files, setFiles] = useState<FileEntry[]>([]);
   const [status, setStatus] = useState("Waiting");
+  const [folderName, setFolderName] = useState("");
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
-
+  const [stageAfterDays, setStageAfterDays] = useState(2);
+  const [deleteAfterDays, setDeleteAfterDays] = useState(7);
+  
 
   const chooseFolder = async () => {
     const folder = await open({
@@ -23,6 +32,33 @@ function App() {
 
     if (folder) {
       setSelectedFolder(folder);
+      setFolderName(folder);
+    }
+  };
+
+  const sendWatchRule = async () => {
+    const ruleIsValid = deleteAfterDays > stageAfterDays;
+    if (ruleIsValid && selectedFolder) {
+      setStatus("Rule is Valid, Saving..");
+
+      try {
+        const result = await invoke<WatchRuleEntry>("save_watch_rule", {
+          path: selectedFolder,
+          stageAfterDays,
+          deleteAfterDays,
+        });
+
+        setStatus("Rule Saved");
+        console.log(result);
+      } catch (error) {
+        setStatus(`ERROR: ${String(error)}`);
+      }
+    } else if (!ruleIsValid && selectedFolder){
+      setStatus(`Rule is not Valid`);
+    } else if (ruleIsValid && !selectedFolder) {
+      setStatus("Folder not Selected!")
+    } else {
+      setStatus("Folder not Selected and Rule is not Valid!!")
     }
   };
 
@@ -48,10 +84,42 @@ function App() {
   return (
     <main>
       <h1>Gobbler</h1>
+
       <button onClick={chooseFolder}>Choose Folder</button>
       <button onClick={scanFolder}>Scan</button>
+      <div>
+        <label>
+          Stage after
+          <input
+            type="number"
+            min="0"
+            value={stageAfterDays}
+            onChange={(event) => setStageAfterDays(Number(event.target.value))}
+          />
+          days
+        </label>
+      </div>
 
+      <div>
+        <label>
+          Delete after
+          <input
+            type="number"
+            min="1"
+            value={deleteAfterDays}
+            onChange={(event) => setDeleteAfterDays(Number(event.target.value))}
+          />
+          days
+        </label>
+      </div>
+      <button onClick={sendWatchRule}>
+        Save Rule
+      </button>
+
+
+      <p>{folderName}</p>
       <p>{status}</p>
+
 
       <ul>
         {files.map((file) => (
@@ -60,7 +128,7 @@ function App() {
           </li>
         ))}
       </ul>
-    </main>
+    </main >
   );
 }
 
