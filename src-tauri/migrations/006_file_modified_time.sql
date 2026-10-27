@@ -1,0 +1,1 @@
+ALTER TABLE tracked_files ADD COLUMN modified_at INTEGER NOT NULL DEFAULT 0;
