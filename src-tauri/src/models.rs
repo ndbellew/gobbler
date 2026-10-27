@@ -25,3 +25,11 @@ pub struct TrackedFileView {
     pub age_days: u64,
 }
 
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WatchRule {
+    pub path: PathBuf,
+    pub stage_after_days: u64,
+    pub delete_after_days: u64,
+}
